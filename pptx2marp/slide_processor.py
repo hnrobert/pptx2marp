@@ -26,11 +26,13 @@ class SlideProcessor:
             if title_shape is not None and shape == title_shape:
                 continue
 
-            if getattr(shape, "shape_type", None) == 13 and hasattr(shape, "image"):
-                image_count += 1
-                image_path = self.image_extractor.save_picture(shape, slide_index, image_count)
-                lines.append(f"![slide-{slide_index}-image-{image_count}]({image_path})")
-                lines.append("")
+            if getattr(shape, "shape_type", None) == 13:
+                next_image_index = image_count + 1
+                image_path = self.image_extractor.save_picture(shape, slide_index, next_image_index)
+                if image_path:
+                    image_count = next_image_index
+                    lines.append(f"![slide-{slide_index}-image-{image_count}]({image_path})")
+                    lines.append("")
                 continue
 
             if getattr(shape, "has_text_frame", False):
